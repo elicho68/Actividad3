@@ -39,7 +39,20 @@ public class frm_personas extends javax.swing.JFrame {
     txt_salario.setText(tbl_docente.getValueAt(fila, 7).toString());
     txt_fecha_il.setText(tbl_docente.getValueAt(fila, 8).toString());
 
-}    
+}
+ 
+public void limpiar_datos(){
+    
+    txt_nit.setText("");
+    txt_nombres.setText("");
+    txt_apellidos.setText("");
+    txt_direccion.setText("");
+    txt_telefono.setText("");
+    txt_fn.setText("");
+    txt_cdocente.setText("");
+    txt_salario.setText("");
+    txt_fecha_il.setText("");
+} 
     
 
     /**
@@ -121,9 +134,24 @@ public class frm_personas extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tbl_docente.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_docenteMouseClicked(evt);
+            }
+        });
+        tbl_docente.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tbl_docenteKeyReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(tbl_docente);
 
         btn_limpiar.setText("Limpiar");
+        btn_limpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_limpiarActionPerformed(evt);
+            }
+        });
 
         btn_crear.setText("Crear");
         btn_crear.addActionListener(new java.awt.event.ActionListener() {
@@ -133,8 +161,18 @@ public class frm_personas extends javax.swing.JFrame {
         });
 
         btn_actualizar.setText("Actualizar");
+        btn_actualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_actualizarActionPerformed(evt);
+            }
+        });
 
         btn_borrar.setText("Borrar");
+        btn_borrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_borrarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -295,17 +333,81 @@ private java.sql.Date convertirFecha(String fechaTexto) {
     if (fechaNacimiento == null || fechaIngresoLaborar == null) {
         return; // No procede si alguna fecha es inválida
     }        
-        
         docente = new Docente(txt_nit.getText(),txt_nombres.getText(),txt_apellidos.getText(),
                               txt_direccion.getText(),txt_telefono.getText(), 
                               fechaNacimiento,txt_cdocente.getText(), Double.parseDouble(txt_salario.getText()),
                               fechaIngresoLaborar, modelo.Docente.obtenerFechaHoraActual());
         docente.crear();
         
+        limpiar_datos();
+        
         //actualiza tabla
         this.tbl_docente.setModel(docente.leer());
+
+        
         
     }//GEN-LAST:event_btn_crearActionPerformed
+
+    private void btn_limpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_limpiarActionPerformed
+        // TODO add your handling code here:
+                limpiar_datos();
+    }//GEN-LAST:event_btn_limpiarActionPerformed
+
+    private void btn_actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_actualizarActionPerformed
+        // TODO add your handling code here:
+    
+    // Convertir la fecha desde el campo de texto
+    java.sql.Date fechaNacimiento = convertirFecha(txt_fn.getText());
+    java.sql.Date fechaIngresoLaborar = convertirFecha(txt_fecha_il.getText());
+
+    // Verificar que las fechas sean válidas (no nulas)
+    if (fechaNacimiento == null || fechaIngresoLaborar == null) {
+        return; // No procede si alguna fecha es inválida
+    }        
+        
+        docente = new Docente(
+                txt_nit.getText(),
+                txt_nombres.getText(),
+                txt_apellidos.getText(),
+                txt_direccion.getText(),
+                txt_telefono.getText(),
+                fechaNacimiento, 
+                txt_cdocente.getText(),
+                Double.parseDouble(txt_salario.getText()), 
+                fechaIngresoLaborar, 
+                null);
+                
+         docente.actualizar();
+
+        tbl_docente.setModel(docente.leer());
+        limpiar_datos();
+        
+        
+    }//GEN-LAST:event_btn_actualizarActionPerformed
+
+    private void tbl_docenteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_docenteMouseClicked
+        // TODO add your handling code here:
+    selec_datos();
+        
+    }//GEN-LAST:event_tbl_docenteMouseClicked
+
+    private void btn_borrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_borrarActionPerformed
+        // TODO add your handling code here:
+        docente = new Docente();
+        docente.setNit(txt_nit.getText());
+        docente.borrar();
+        
+        limpiar_datos();
+//actualiza la tabla para ver el ultimo ingreso        
+        this.tbl_docente.setModel(docente.leer());        
+                
+        
+    }//GEN-LAST:event_btn_borrarActionPerformed
+
+    private void tbl_docenteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbl_docenteKeyReleased
+        // TODO add your handling code here:
+        selec_datos();
+    }//GEN-LAST:event_tbl_docenteKeyReleased
 
     /**
      * @param args the command line arguments

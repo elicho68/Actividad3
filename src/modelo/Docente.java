@@ -159,11 +159,56 @@ public class Docente extends Persona {
     @Override
     public void actualizar() {
         // Código para actualizar un docente en la base de datos
+        try {
+            PreparedStatement parametro;
+            cn = new Conexion();
+            
+            cn.abrir_conexion( );
+            String query ="UPDATE docente_persona SET nombres = ?, apellidos = ?, direccion = ?,telefono = ?, fecha_nacimiento = ?, codigo_docente = ?,salario = ?,fecha_ingreso_laborar = ? WHERE nit = ?;";
+            parametro = (PreparedStatement) cn.ConexionBD.prepareStatement(query);
+            ///parametro.setString(1, getNit());
+            parametro.setString(1, getNombres());
+            parametro.setString(2, getApellidos());
+            parametro.setString(3, getDireccion());
+            parametro.setString(4, getTelefono());
+            parametro.setDate(5, new java.sql.Date(getFechaNacimiento().getTime()));
+            parametro.setString(6, getCodigoDocente());
+            parametro.setDouble(7, getSalario());
+            parametro.setDate(8, new java.sql.Date(getFechaIngresoLaborar().getTime()));
+            parametro.setString(9, getNit());                        
+            int executar = parametro.executeUpdate();
+            System.out.println("Actualizacion Exitoso... " + Integer.toString(executar));
+            
+            cn.cerrar_conexion( );
+            
+        
+        }catch(SQLException ex){
+                System.out.println("Error al Actualizar" + ex.getMessage());
+        }
     }
 
     @Override
     public void borrar() {
         // Código para borrar un docente de la base de datos
+try {
+            PreparedStatement parametro;
+            cn = new Conexion();
+            
+            cn.abrir_conexion( );
+            String query ="DELETE FROM docente_persona WHERE nit = ?;";
+            parametro = (PreparedStatement) cn.ConexionBD.prepareStatement(query);
+            parametro.setString(1, getNit());            
+            int executar = parametro.executeUpdate();
+            System.out.println("Borrado Exitoso... " + Integer.toString(executar));
+            
+            cn.cerrar_conexion( );
+            
+        
+        }catch(SQLException ex){
+                System.out.println("Error al Borrar" + ex.getMessage());
+        }
+
+
     }    
     
     
